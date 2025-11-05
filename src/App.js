@@ -13,7 +13,12 @@ function App() {
     contattoPreferito: 'email'
   });
 
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const logos = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png'];
+  const logosPerSlide = 5;
+
   useEffect(() => {
+
     // Initialize Rome Skyline Animation
     const initSkylineAnimation = () => {
       const canvas = document.getElementById('skylineCanvas');
@@ -211,6 +216,18 @@ function App() {
     console.log('Form submitted:', formData);
   };
 
+  const nextSlide = () => {
+    if (currentSlide < logos.length - logosPerSlide) {
+      setCurrentSlide(currentSlide + 1);
+    }
+  };
+
+  const prevSlide = () => {
+    if (currentSlide > 0) {
+      setCurrentSlide(currentSlide - 1);
+    }
+  };
+
   return (
     <div className="app">
       {/* Header */}
@@ -272,12 +289,12 @@ function App() {
             <div className="service-card">
               <h3>Sviluppo Siti Web</h3>
               <div className="service-image">
-                <img src="service-web.jpg" alt="Sviluppo Siti Web" />
+                <img src="sviluppo_web.png" alt="Sviluppo Siti Web" />
               </div>
               <p>
-                Design, strategia e codice si fondono per creare esperienze 
-                digitali che comunicano valore. Ogni sito è costruito da zero, 
-                ottimizzato per la velocità e pensato per crescere con il tuo 
+                Design, strategia e codice si fondono per creare esperienze
+                digitali che comunicano valore. Ogni sito è costruito da zero,
+                ottimizzato per la velocità e pensato per crescere con il tuo
                 brand.
               </p>
             </div>
@@ -285,11 +302,11 @@ function App() {
             <div className="service-card">
               <h3>Sviluppo Ecommerce</h3>
               <div className="service-image">
-                <img src="service-ecommerce.jpg" alt="Sviluppo Ecommerce" />
+                <img src="sviluppo_ecommerce.png" alt="Sviluppo Ecommerce" />
               </div>
               <p>
-                Progettiamo piattaforme di vendita online performanti, 
-                facili da gestire e integrate con sistemi di pagamento e 
+                Progettiamo piattaforme di vendita online performanti,
+                facili da gestire e integrate con sistemi di pagamento e
                 logistica. Dalla UX al checkout, tutto è ottimizzato per vendere.
               </p>
             </div>
@@ -297,12 +314,12 @@ function App() {
             <div className="service-card">
               <h3>Software Custom</h3>
               <div className="service-image">
-                <img src="service-software.jpg" alt="Software Custom" />
+                <img src="sviluppo_software.png" alt="Software Custom" />
               </div>
               <p>
-                Realizziamo soluzioni su misura per la gestione interna 
-                della tua azienda. Gestionali, portali e applicazioni web 
-                costruiti intorno ai tuoi processi, per rendere il lavoro 
+                Realizziamo soluzioni su misura per la gestione interna
+                della tua azienda. Gestionali, portali e applicazioni web
+                costruiti intorno ai tuoi processi, per rendere il lavoro
                 più efficiente e connesso.
               </p>
             </div>
@@ -321,17 +338,36 @@ function App() {
           <p className="portfolio-subtitle">
             Ogni progetto è un'esperienza digitale unica, costruita intorno agli obiettivi del brand.
           </p>
-          
-          <div className="portfolio-grid">
-            <div className="portfolio-item">
-              <div className="portfolio-placeholder"></div>
+
+          <div className="logo-slider">
+            <button
+              className="slider-arrow slider-arrow-left"
+              onClick={prevSlide}
+              disabled={currentSlide === 0}
+            >
+              &lt;
+            </button>
+
+            <div className="logo-slider-track">
+              <div
+                className="logo-slider-content"
+                style={{ transform: `translateX(-${currentSlide * (100 / logosPerSlide)}%)` }}
+              >
+                {logos.map((logo, index) => (
+                  <div key={index} className="logo-item">
+                    <img src={logo} alt={`Logo ${index + 1}`} />
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="portfolio-item">
-              <div className="portfolio-placeholder"></div>
-            </div>
-            <div className="portfolio-item">
-              <div className="portfolio-placeholder"></div>
-            </div>
+
+            <button
+              className="slider-arrow slider-arrow-right"
+              onClick={nextSlide}
+              disabled={currentSlide >= logos.length - logosPerSlide}
+            >
+              &gt;
+            </button>
           </div>
         </div>
       </section>
@@ -343,21 +379,45 @@ function App() {
           
           <div className="process-grid">
             <div className="process-step">
-              <div className="step-number">1</div>
+              <div className="step-animation">
+                <iframe
+                  src="/uno.html"
+                  title="Animation 1"
+                  scrolling="no"
+                  frameBorder="0"
+                />
+              </div>
+              <div className="step-separator"></div>
               <h3>Analisi</h3>
               <p>Comprendiamo<br/>esigenze e obiettivi<br/>del cliente.</p>
             </div>
 
             <div className="process-step">
-              <div className="step-number">2</div>
+              <div className="step-animation">
+                <iframe
+                  src="/due.html"
+                  title="Animation 2"
+                  scrolling="no"
+                  frameBorder="0"
+                />
+              </div>
+              <div className="step-separator"></div>
               <h3>Design</h3>
-              <p>traduciamo la strategia in<br/>un'interfaccia chiara ed<br/>elegante.</p>
+              <p>Traduciamo la strategia in<br/>un'interfaccia chiara ed<br/>elegante.</p>
             </div>
 
             <div className="process-step">
-              <div className="step-number">3</div>
+              <div className="step-animation">
+                <iframe
+                  src="/tre.html"
+                  title="Animation 3"
+                  scrolling="no"
+                  frameBorder="0"
+                />
+              </div>
+              <div className="step-separator"></div>
               <h3>Performance</h3>
-              <p>ottimizziamo tecnologia e<br/>contenuti per garantire<br/>risultati misurabili.</p>
+              <p>Ottimizziamo tecnologia e<br/>contenuti per garantire<br/>risultati misurabili.</p>
             </div>
           </div>
         </div>
@@ -366,6 +426,9 @@ function App() {
       {/* About Section */}
       <section className="about">
         <div className="about-container">
+          <div className="about-image">
+            <img src="roma.png" alt="Virgo Roma" />
+          </div>
           <div className="about-content">
             <h2>La qualità Virgo,<br/>con il cuore a Roma.</h2>
             <p>
@@ -375,10 +438,6 @@ function App() {
               esperienze digitali che funzionano, senza compromessi.
             </p>
             <button className="cta-button-outline">Raccontaci la tua idea</button>
-          </div>
-          <div className="about-image">
-            {/* Placeholder per immagine */}
-            <div className="image-placeholder"></div>
           </div>
         </div>
       </section>

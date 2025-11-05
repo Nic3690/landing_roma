@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pixel 3 - Arcade (quadrati)</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pixel-canvas {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+  }
+
+  /* Layout: 4 colonne × 5 righe per il numero 3 */
+  .pixel-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    width: 80px;
+    height: 100px;
+    background: transparent;
+  }
+
+  /* Pixel quadrato */
+  .pixel {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+
+  .on {
+    background: #f20050;
+  }
+</style>
+</head>
+<body>
+  <div class="pixel-canvas">
+    <div class="pixel-grid" id="pixelGrid">
+      <!-- RIGA 0 (parte superiore) -->
+      <div class="pixel" data-order="0"></div>
+      <div class="pixel" data-order="1"></div>
+      <div class="pixel" data-order="2"></div>
+      <div class="pixel" data-order="3"></div>
+      
+      <!-- RIGA 1 -->
+      <div class="pixel"></div>
+      <div class="pixel"></div>
+      <div class="pixel"></div>
+      <div class="pixel" data-order="4"></div>
+      
+      <!-- RIGA 2 (parte centrale) -->
+      <div class="pixel"></div>
+      <div class="pixel" data-order="5"></div>
+      <div class="pixel" data-order="6"></div>
+      <div class="pixel" data-order="7"></div>
+      
+      <!-- RIGA 3 -->
+      <div class="pixel"></div>
+      <div class="pixel"></div>
+      <div class="pixel"></div>
+      <div class="pixel" data-order="8"></div>
+      
+      <!-- RIGA 4 (base) -->
+      <div class="pixel" data-order="9"></div>
+      <div class="pixel" data-order="10"></div>
+      <div class="pixel" data-order="11"></div>
+      <div class="pixel" data-order="12"></div>
+    </div>
+  </div>
+<script>
+(function() {
+  const appearDur = 1000, pause = 200, disappearDur = 1000;
+  const grid = document.getElementById('pixelGrid');
+  const all = Array.from(grid.querySelectorAll('[data-order]'));
+  const ordered = all.map(p => ({ 
+    el: p, 
+    order: parseInt(p.dataset.order) || 0 
+  }))
+  .sort((a,b) => a.order - b.order)
+  .map(x => x.el);
+  
+  function runCycle() {
+    ordered.forEach((el, i) => {
+      setTimeout(() => el.classList.add('on'), (appearDur/ordered.length) * i);
+      setTimeout(() => el.classList.remove('on'),
+        appearDur + pause + (disappearDur/ordered.length) * i);
+    });
+  }
+  
+  runCycle();
+  setInterval(runCycle, appearDur + pause + disappearDur);
+})();
+</script>
+</body>
+</html>

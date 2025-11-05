@@ -92,7 +92,7 @@ body {
   margin-bottom: 30px;
   padding: 8px 16px;
   border: 1.5px solid #f20050;
-  border-radius: 25px;
+  border-radius: 30px;
   display: inline-block;
 }
 
@@ -139,7 +139,7 @@ body {
   max-width: 1400px;
   margin: 40px auto;
   padding: 60px;
-  border-radius: 12px;
+  border-radius: 24px;
 }
 
 .intro-container {
@@ -166,7 +166,7 @@ body {
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 18px;
   line-height: 1.6;
-  color: #333333;
+  color: black;
   margin-bottom: 60px;
 }
 
@@ -203,7 +203,7 @@ body {
 .services-container {
   background: #f8f8f8;
   border: 1px solid #d6d6d6;
-  border-radius: 12px;
+  border-radius: 24px;
   padding: 60px;
   width: calc(100% - 120px);
   max-width: 1400px;
@@ -232,9 +232,9 @@ body {
 }
 
 .service-card {
-  background: #ffffff;
+  background: #fafafa;
   border: 1px solid #e6e6e6;
-  border-radius: 8px;
+  border-radius: 26px;
   padding: 30px;
   transition: all 0.3s ease;
   position: relative;
@@ -258,7 +258,7 @@ body {
 .service-image {
   width: 100%;
   height: 300px;
-  border-radius: 8px;
+  border-radius: 16px;
   overflow: hidden;
   margin-bottom: 25px;
   position: relative;
@@ -333,7 +333,7 @@ body {
 .portfolio-container {
   background: #f8f8f8;
   border: 1px solid #d6d6d6;
-  border-radius: 12px;
+  border-radius: 24px;
   padding: 60px;
   width: calc(100% - 120px);
   max-width: 1400px;
@@ -356,30 +356,72 @@ body {
   margin-bottom: 60px;
 }
 
-.portfolio-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.logo-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
   gap: 30px;
   margin-bottom: 40px;
 }
 
-.portfolio-item {
-  position: relative;
-  aspect-ratio: 4/3;
+.slider-arrow {
+  background: transparent;
+  color: #f20050;
+  border: none;
+  width: 50px;
+  height: 50px;
+  font-size: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  font-weight: 300;
+}
+
+.slider-arrow:hover:not(:disabled) {
+  color: #d9004a;
+  transform: scale(1.2);
+}
+
+.slider-arrow:disabled {
+  color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.logo-slider-track {
+  flex: 1;
   overflow: hidden;
-  border-radius: 8px;
+  position: relative;
 }
 
-.portfolio-placeholder {
-  width: 100%;
-  height: 100%;
-  background: #ffffff;
-  border: 1px solid #e6e6e6;
-  transition: transform 0.3s ease;
+.logo-slider-content {
+  display: flex;
+  transition: transform 0.5s ease;
 }
 
-.portfolio-item:hover .portfolio-placeholder {
-  transform: scale(1.05);
+.logo-item {
+  flex: 0 0 20%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-item img {
+  max-width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+  filter: grayscale(100%);
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.logo-item:hover img {
+  filter: grayscale(0%);
+  opacity: 1;
 }
 
 /* Process Section */
@@ -391,7 +433,7 @@ body {
 .process-container {
   background: #f8f8f8;
   border: 1px solid #d6d6d6;
-  border-radius: 12px;
+  border-radius: 24px;
   padding: 60px;
   width: calc(100% - 120px);
   max-width: 1400px;
@@ -415,11 +457,11 @@ body {
 }
 
 .process-step {
-  text-align: center;
+  text-align: start;
   position: relative;
-  background: #ffffff;
+  background: #fafafa;
   border: 1px solid #e6e6e6;
-  border-radius: 8px;
+  border-radius: 16px;
   padding: 40px 30px;
   transition: all 0.3s ease;
 }
@@ -429,26 +471,52 @@ body {
   transform: translateY(-4px);
 }
 
+/* Stili per le animazioni HTML */
+.step-animation {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  background: #f4f4f4;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.step-animation iframe {
+  width: 60%;
+  height: 60%;
+  border: none;
+  display: block;
+  background: transparent;
+}
+
+/* Rimuoviamo il vecchio stile per step-number dato che ora usiamo le animazioni */
 .step-number {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 60px;
-  font-weight: 500;
-  color: #f20050;
-  line-height: 1;
-  margin-bottom: 20px;
+  display: none;
+}
+
+.step-separator {
+  width: 100%;
+  height: 1px;
+  background: #e6e6e6;
+  margin: 20px 0;
 }
 
 .process-step h3 {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 16px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 20px;
   margin-bottom: 15px;
-  font-weight: 500;
+  font-weight: 600;
   color: #000000;
 }
 
 .process-step p {
   font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.6;
   color: #333333;
 }
@@ -462,14 +530,14 @@ body {
 .about-container {
   background: #f8f8f8;
   border: 1px solid #d6d6d6;
-  border-radius: 12px;
+  border-radius: 24px;
   padding: 60px;
   width: calc(100% - 120px);
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  grid-template-columns: 0.6fr 1fr;
+  gap: 120px;
   align-items: center;
 }
 
@@ -492,16 +560,17 @@ body {
 
 .about-image {
   position: relative;
-  height: 400px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 16px;
 }
 
-.image-placeholder {
+.about-image img {
   width: 100%;
   height: 100%;
-  background: #ffffff;
-  border: 1px solid #e6e6e6;
-  border-radius: 8px;
-  position: relative;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* Contact Section */
@@ -513,7 +582,7 @@ body {
 .contact-container {
   background: #f8f8f8;
   border: 1px solid #d6d6d6;
-  border-radius: 12px;
+  border-radius: 24px;
   padding: 60px;
   width: calc(100% - 120px);
   max-width: 1400px;
@@ -570,7 +639,7 @@ body {
 .form-group textarea {
   background: #ffffff;
   border: 1px solid #d0d0d0;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 12px 15px;
   color: #000000;
   font-size: 16px;
@@ -616,19 +685,22 @@ body {
 .cta-button,
 .submit-btn {
   background: #f20050;
-  color: #ffffff;
+  color: #fafafa;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 12px 24px;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   text-decoration: none;
+  width: 380px;
+  height: 48px;
 }
 
 .cta-button:hover,
@@ -653,20 +725,24 @@ body {
   background: transparent;
   color: #f20050;
   border: 2px solid #f20050;
-  border-radius: 8px;
-  padding: 10px 36px;
+  border-radius: 12px;
+  padding: 12px 24px;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
+  width: 380px;
+  height: 48px;
 }
 
 .cta-button-outline:hover {
   background: #f20050;
-  color: #ffffff;
+  color: #fafafa;
   transform: translateY(-2px);
 }
 
@@ -674,7 +750,7 @@ body {
 .footer {
   padding: 60px 60px 30px;
   background-color: #000000;
-  color: #ffffff;
+  color: #fafafa;
   margin-top: 80px;
 }
 
@@ -753,8 +829,14 @@ body {
     gap: 40px;
   }
   
-  .portfolio-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .logo-item {
+    flex: 0 0 33.33%;
+  }
+
+  .slider-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 30px;
   }
 }
 
@@ -830,7 +912,27 @@ body {
     gap: 15px;
   }
   
-  .portfolio-grid {
-    grid-template-columns: 1fr;
+  .logo-item {
+    flex: 0 0 50%;
+  }
+
+  .logo-slider {
+    gap: 15px;
+  }
+
+  .slider-arrow {
+    width: 35px;
+    height: 35px;
+    font-size: 28px;
+  }
+  
+  /* Responsive per le animazioni */
+  .step-animation {
+    padding: 15px;
+  }
+
+  .step-animation iframe {
+    width: 60%;
+    height: 60%;
   }
 }
