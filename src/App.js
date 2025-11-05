@@ -127,6 +127,9 @@ function App() {
               }
             }
             break;
+          default:
+            // Keep baseline for other sections
+            break;
         }
         
         profile[x] = y;
@@ -213,7 +216,7 @@ function App() {
       {/* Header */}
       <header className="header">
         <div className="header-container">
-          <a href="#" className="logo">
+          <a href="/" className="logo">
             <img src="logo.png" alt="Virgo" />
           </a>
         </div>
@@ -237,7 +240,7 @@ function App() {
             </a>
           </div>
           <div className="hero-image">
-            <img src="hero_image.jpg" alt="Digital Experience" />
+            <img src="hero.png" alt="Digital Experience" />
           </div>
         </div>
       </section>
@@ -311,6 +314,28 @@ function App() {
         </div>
       </section>
 
+      {/* Portfolio Section */}
+      <section className="portfolio">
+        <div className="portfolio-container">
+          <h2>Abbiamo dato forma alle loro idee.</h2>
+          <p className="portfolio-subtitle">
+            Ogni progetto è un'esperienza digitale unica, costruita intorno agli obiettivi del brand.
+          </p>
+          
+          <div className="portfolio-grid">
+            <div className="portfolio-item">
+              <div className="portfolio-placeholder"></div>
+            </div>
+            <div className="portfolio-item">
+              <div className="portfolio-placeholder"></div>
+            </div>
+            <div className="portfolio-item">
+              <div className="portfolio-placeholder"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Process Section */}
       <section className="process">
         <div className="process-container">
@@ -335,30 +360,6 @@ function App() {
               <p>ottimizziamo tecnologia e<br/>contenuti per garantire<br/>risultati misurabili.</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Portfolio Section */}
-      <section className="portfolio">
-        <div className="portfolio-container">
-          <h2>Abbiamo dato forma alle loro idee.</h2>
-          <p className="portfolio-subtitle">
-            Ogni progetto è un'esperienza digitale unica, costruita intorno agli obiettivi del brand.
-          </p>
-          
-          <div className="portfolio-grid">
-            <div className="portfolio-item">
-              <div className="portfolio-placeholder"></div>
-            </div>
-            <div className="portfolio-item">
-              <div className="portfolio-placeholder"></div>
-            </div>
-            <div className="portfolio-item">
-              <div className="portfolio-placeholder"></div>
-            </div>
-          </div>
-          
-          <button className="cta-button">Contattaci senza impegno</button>
         </div>
       </section>
 
@@ -519,8 +520,8 @@ function App() {
           <div className="footer-brand">virgo</div>
           
           <div className="footer-links">
-            <a href="#" className="footer-link">Privacy Policy</a>
-            <a href="#" className="footer-link">Cookie Policy</a>
+            <a href="/privacy" className="footer-link">Privacy Policy</a>
+            <a href="/cookies" className="footer-link">Cookie Policy</a>
           </div>
         </div>
       </footer>
