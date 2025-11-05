@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roma Skyline - Animazione Pixel Art</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 50%, #FFF 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+        }
+        
+        #canvas {
+            border: 2px solid #333;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #357ABD;
+        }
+        
+        .info {
+            margin-top: 10px;
+            text-align: center;
+            color: #333;
+        }
+        
+        input[type="range"] {
+            width: 200px;
+        }
+        
+        label {
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #333;">Skyline di Roma - Animazione Pixel Art</h1>
+    
+    <canvas id="canvas"></canvas>
+    
+    <div class="controls">
+        <button onclick="startAnimation()">Avvia Animazione</button>
+        <button onclick="resetAnimation()">Reset</button>
+        <button onclick="togglePause()">Pausa/Riprendi</button>
+    </div>
+    
+    <div class="controls">
+        <label for="speed">Velocità: </label>
+        <input type="range" id="speed" min="1" max="20" value="5">
+        <span id="speedValue">5</span>
+    </div>
+    
+    <div class="controls">
+        <label for="pixelSize">Dimensione Pixel: </label>
+        <input type="range" id="pixelSize" min="2" max="10" value="4">
+        <span id="pixelSizeValue">4</span>
+    </div>
+    
+    <div class="controls">
+        <label for="lineThickness">Spessore Linea: </label>
+        <input type="range" id="lineThickness" min="1" max="3" value="1">
+        <span id="lineThicknessValue">1</span>
+    </div>
+    
+    <div class="controls">
+        <label for="spacing">Spaziatura Edifici: </label>
+        <input type="range" id="spacing" min="0" max="10" value="5">
+        <span id="spacingValue">5</span>
+    </div>
+    
+    <div class="controls">
+        <label>
+            <input type="checkbox" id="showGrid" onchange="drawSkyline()"> Mostra Griglia
+        </label>
+    </div>
+    
+    <div class="info">
+        <p>Progresso: <span id="progress">0</span>%</p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Configurazione
+        let PIXEL_SIZE = 4;
+        let CANVAS_WIDTH = 800;
+        let CANVAS_HEIGHT = 300;
+        let animationSpeed = 5;
+        let lineThickness = 1;
+        let spacing = 5;
+        let showGrid = false;
+        let isPaused = false;
+        let animationId = null;
+        let currentColumn = 0;
+        
+        // Aggiorna canvas quando cambia la dimensione pixel
+        document.getElementById('pixelSize').addEventListener('input', (e) => {
+            PIXEL_SIZE = parseInt(e.target.value);
+            document.getElementById('pixelSizeValue').textContent = PIXEL_SIZE;
+            resetAnimation();
+            drawSkyline();
+        });
+        
+        // Aggiorna velocità
+        document.getElementById('speed').addEventListener('input', (e) => {
+            animationSpeed = parseInt(e.target.value);
+            document.getElementById('speedValue').textContent = animationSpeed;
+        });
+        
+        // Aggiorna spessore linea
+        document.getElementById('lineThickness').addEventListener('input', (e) => {
+            lineThickness = parseInt(e.target.value);
+            document.getElementById('lineThicknessValue').textContent = lineThickness;
+            drawSkyline();
+        });
+        
+        // Aggiorna spaziatura
+        document.getElementById('spacing').addEventListener('input', (e) => {
+            spacing = parseInt(e.target.value);
+            document.getElementById('spacingValue').textContent = spacing;
+            // Rigenera lo skyline con nuova spaziatura
+            skylineData = generateSkylineData();
+            resetAnimation();
+            drawSkyline();
+        });
+        
+        // Aggiorna visualizzazione griglia
+        document.getElementById('showGrid').addEventListener('change', (e) => {
+            showGrid = e.target.checked;
+            drawSkyline();
+        });
+        
+        // Imposta dimensioni canvas
+        canvas.width = CANVAS_WIDTH;
+        canvas.height = CANVAS_HEIGHT;
+        
+        // Definizione dello skyline di Roma in coordinate pixel
+        // Questa è una rappresentazione semplificata basata sull'immagine
+        let skylineData = generateSkylineData();
+        
+        function generateSkylineData() {
+            const width = Math.floor(CANVAS_WIDTH / PIXEL_SIZE);
+            const height = Math.floor(CANVAS_HEIGHT / PIXEL_SIZE);
+            const data = [];
+            
+            // Inizializza array vuoto
+            for (let x = 0; x < width; x++) {
+                data[x] = [];
+                for (let y = 0; y < height; y++) {
+                    data[x][y] = 0;
+                }
+            }
+            
+            // Crea una linea di contorno continua per lo skyline
+            // Ogni x ha una sola altezza y che definisce il profilo
+            const skylineProfile = createSkylineProfile(width, height);
+            
+            // Converti il profilo in pixel connessi
+            for (let x = 0; x < width - 1; x++) {
+                const currentY = skylineProfile[x];
+                const nextY = skylineProfile[x + 1];
+                
+                // Disegna pixel corrente
+                data[x][currentY] = 1;
+                
+                // Se c'è un dislivello, collega i pixel verticalmente
+                if (currentY !== nextY) {
+                    const minY = Math.min(currentY, nextY);
+                    const maxY = Math.max(currentY, nextY);
+                    for (let y = minY; y <= maxY; y++) {
+                        data[x][y] = 1;
+                    }
+                }
+            }
+            
+            // Ultimo pixel
+            if (width > 0) {
+                data[width - 1][skylineProfile[width - 1]] = 1;
+            }
+            
+            return data;
+        }
+        
+        function createSkylineProfile(width, height) {
+            const profile = [];
+            const baseline = height - 10;
+            
+            // La spaziatura influisce sulla distanza tra gli edifici
+            const gap = spacing * 2; // Moltiplica la spaziatura per renderla più evidente
+            
+            // Crea il profilo dello skyline di Roma con spaziatura dinamica
+            for (let x = 0; x < width; x++) {
+                let y = baseline; // Altezza di base (linea dell'orizzonte)
+                
+                // Calcola le posizioni degli edifici basate sulla spaziatura
+                let currentPos = 0;
+                
+                // Prima cupola
+                currentPos = 10;
+                if (x >= currentPos && x <= currentPos + 8) {
+                    const center = currentPos + 4;
+                    const radius = 4;
+                    const dx = Math.abs(x - center);
+                    if (dx <= radius) {
+                        y = baseline - Math.floor(Math.sqrt(radius * radius - dx * dx) * 1.5);
+                    }
+                }
+                
+                // Piccola cupola
+                currentPos += 8 + gap;
+                if (x >= currentPos && x <= currentPos + 6) {
+                    const center = currentPos + 3;
+                    const radius = 2.5;
+                    const dx = Math.abs(x - center);
+                    if (dx <= radius) {
+                        y = baseline - Math.floor(Math.sqrt(radius * radius - dx * dx) * 1.8);
+                    }
+                }
+                
+                // Edificio basso
+                currentPos += 6 + gap;
+                if (x >= currentPos && x <= currentPos + 6) {
+                    y = baseline - 4;
+                    if (x === currentPos + 3) y = baseline - 5;
+                }
+                
+                // Edificio medio
+                currentPos += 6 + gap;
+                if (x >= currentPos && x <= currentPos + 5) {
+                    y = baseline - 6;
+                }
+                
+                // Obelisco/Colonna alta
+                currentPos += 5 + gap;
+                if (x >= currentPos && x <= currentPos + 2) {
+                    if (x === currentPos || x === currentPos + 1) {
+                        y = baseline - 15;
+                    } else {
+                        y = baseline - 14;
+                    }
+                }
+                
+                // Colosseo
+                currentPos += 2 + gap;
+                const colosseumStart = currentPos;
+                if (x >= colosseumStart && x <= colosseumStart + 20) {
+                    const relX = x - colosseumStart;
+                    if (relX === 0 || relX === 20) {
+                        y = baseline - 3;
+                    } else if (relX > 0 && relX < 20) {
+                        const baseHeight = 10;
+                        const archWave = Math.sin((relX / 20) * Math.PI) * 2;
+                        y = baseline - baseHeight - Math.floor(archWave);
+                        
+                        if (relX % 4 === 0 && relX > 2 && relX < 18) {
+                            y += 1;
+                        }
+                    }
+                }
+                
+                // Cupola di San Pietro
+                currentPos += 20 + gap;
+                if (x >= currentPos && x <= currentPos + 10) {
+                    const center = currentPos + 5;
+                    const radius = 5;
+                    const dx = Math.abs(x - center);
+                    if (dx <= radius) {
+                        const domeHeight = Math.sqrt(radius * radius - dx * dx);
+                        y = baseline - Math.floor(domeHeight * 1.6);
+                        
+                        if (x === center) {
+                            y -= 3;
+                        }
+                    }
+                }
+                
+                // Edifici finali
+                currentPos += 10 + gap;
+                if (x >= currentPos && x <= currentPos + 6) {
+                    y = baseline - 6;
+                    if (x === currentPos + 3) y = baseline - 9;
+                }
+                
+                // Edificio basso finale
+                currentPos += 6 + gap;
+                if (x >= currentPos && x <= currentPos + 6) {
+                    y = baseline - 4;
+                }
+                
+                // Edificio medio finale
+                currentPos += 6 + gap;
+                if (x >= currentPos && x <= currentPos + 7) {
+                    y = baseline - 5;
+                    if (x === currentPos + 3) {
+                        y = baseline - 7;
+                    }
+                }
+                
+                // Cupola finale piccola
+                currentPos += 7 + gap;
+                if (x >= currentPos && x <= currentPos + 6) {
+                    const center = currentPos + 3;
+                    const radius = 3;
+                    const dx = Math.abs(x - center);
+                    if (dx <= radius) {
+                        y = baseline - Math.floor(Math.sqrt(radius * radius - dx * dx) * 1.3);
+                    }
+                }
+                
+                // Edifici molto bassi alla fine
+                currentPos += 6 + gap;
+                if (x >= currentPos && x <= currentPos + 6) {
+                    y = baseline - 3;
+                    if (x === currentPos + 3) y = baseline - 4;
+                }
+                
+                profile[x] = y;
+            }
+            
+            return profile;
+        }
+        
+        function drawPixel(x, y, color = '#2C3E50') {
+            ctx.fillStyle = color;
+            
+            // Disegna pixel con spessore variabile
+            if (lineThickness === 1) {
+                ctx.fillRect(x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+            } else if (lineThickness === 2) {
+                // Disegna pixel più spesso (2x2)
+                ctx.fillRect(x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+                ctx.fillRect((x - 0.5) * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+                ctx.fillRect(x * PIXEL_SIZE, (y - 0.5) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+            } else if (lineThickness === 3) {
+                // Disegna pixel ancora più spesso (3x3)
+                for (let dx = -1; dx <= 1; dx++) {
+                    for (let dy = -1; dy <= 1; dy++) {
+                        ctx.fillRect((x + dx * 0.3) * PIXEL_SIZE, (y + dy * 0.3) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+                    }
+                }
+            }
+        }
+        
+        function drawSkyline() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Disegna griglia sottile (opzionale)
+            if (showGrid) {
+                ctx.strokeStyle = '#f0f0f0';
+                ctx.lineWidth = 0.5;
+                for (let x = 0; x < canvas.width; x += PIXEL_SIZE) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvas.height);
+                    ctx.stroke();
+                }
+                for (let y = 0; y < canvas.height; y += PIXEL_SIZE) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvas.width, y);
+                    ctx.stroke();
+                }
+            }
+            
+            // Disegna lo skyline fino alla colonna corrente
+            for (let x = 0; x < Math.min(currentColumn, skylineData.length); x++) {
+                for (let y = 0; y < skylineData[x].length; y++) {
+                    if (skylineData[x][y] === 1) {
+                        // Effetto gradiente per le ultime colonne
+                        if (x >= currentColumn - 3 && x < currentColumn) {
+                            const distance = currentColumn - x;
+                            const opacity = 1 - (distance * 0.2);
+                            drawPixel(x, y, `rgba(44, 62, 80, ${opacity})`);
+                        } else {
+                            drawPixel(x, y, '#2C3E50');
+                        }
+                    }
+                }
+            }
+            
+            // Aggiungi effetto "puntatore" per mostrare dove si sta disegnando
+            if (currentColumn > 0 && currentColumn < skylineData.length) {
+                const x = currentColumn - 1;
+                for (let y = 0; y < skylineData[x].length; y++) {
+                    if (skylineData[x][y] === 1) {
+                        // Evidenzia l'ultimo pixel disegnato
+                        ctx.fillStyle = 'rgba(231, 76, 60, 0.5)';
+                        ctx.fillRect(x * PIXEL_SIZE - 2, y * PIXEL_SIZE - 2, PIXEL_SIZE + 4, PIXEL_SIZE + 4);
+                    }
+                }
+            }
+            
+            // Aggiorna progresso
+            const progress = Math.floor((currentColumn / skylineData.length) * 100);
+            document.getElementById('progress').textContent = progress;
+        }
+        
+        function animate() {
+            if (!isPaused && currentColumn < skylineData.length) {
+                // Avanza di più colonne basandosi sulla velocità
+                for (let i = 0; i < animationSpeed; i++) {
+                    if (currentColumn < skylineData.length) {
+                        currentColumn++;
+                    }
+                }
+                drawSkyline();
+                
+                if (currentColumn < skylineData.length) {
+                    animationId = requestAnimationFrame(animate);
+                } else {
+                    // Animazione completata
+                    addCompletionEffect();
+                }
+            }
+        }
+        
+        function addCompletionEffect() {
+            // Effetto finale quando l'animazione è completata
+            let flash = 0;
+            function flashEffect() {
+                flash += 0.1;
+                if (flash < 1) {
+                    ctx.fillStyle = `rgba(255, 215, 0, ${0.3 - flash * 0.3})`;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    requestAnimationFrame(flashEffect);
+                }
+            }
+            flashEffect();
+        }
+        
+        function startAnimation() {
+            if (currentColumn >= skylineData.length) {
+                resetAnimation();
+            }
+            isPaused = false;
+            animate();
+        }
+        
+        function resetAnimation() {
+            currentColumn = 0;
+            isPaused = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            drawSkyline();
+        }
+        
+        function togglePause() {
+            isPaused = !isPaused;
+            if (!isPaused && currentColumn < skylineData.length) {
+                animate();
+            }
+        }
+        
+        // Disegna stato iniziale
+        drawSkyline();
+        
+        // Auto-start dopo 1 secondo
+        setTimeout(() => {
+            startAnimation();
+        }, 1000);
+    </script>
+</body>
+</html>
