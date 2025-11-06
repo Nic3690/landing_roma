@@ -19,6 +19,9 @@ function App() {
   const logos = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png'];
   const logosPerSlide = 5;
 
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+
   useEffect(() => {
     // Parallax effect for hero background
     const handleParallax = () => {
@@ -271,9 +274,53 @@ function App() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+
+    try {
+      const response = await fetch('https://formspree.io/f/manlrple', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: formData.contattoPreferito === 'email' ? formData.email : '',
+          telefono: formData.contattoPreferito === 'telefono' ? formData.telefono : '',
+          nome: formData.nome,
+          cognome: formData.cognome,
+          azienda: formData.azienda,
+          sitoWeb: formData.sitoWeb,
+          messaggio: formData.messaggio,
+          contattoPreferito: formData.contattoPreferito,
+          _replyto: formData.contattoPreferito === 'email' ? formData.email : '',
+          _subject: `Nuovo contatto da ${formData.nome} ${formData.cognome}`
+        })
+      });
+
+      if (response.ok) {
+        setShowSuccessPopup(true);
+        // Reset form
+        setFormData({
+          nome: '',
+          azienda: '',
+          cognome: '',
+          sitoWeb: '',
+          messaggio: '',
+          email: '',
+          telefono: '',
+          contattoPreferito: 'email'
+        });
+        // Hide popup after 3 seconds
+        setTimeout(() => setShowSuccessPopup(false), 3000);
+      } else {
+        setShowErrorPopup(true);
+        setTimeout(() => setShowErrorPopup(false), 3000);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setShowErrorPopup(true);
+      setTimeout(() => setShowErrorPopup(false), 3000);
+    }
   };
 
   const nextSlide = () => {
@@ -290,6 +337,28 @@ function App() {
 
   return (
     <div className="app">
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <div className="popup-overlay">
+          <div className="popup-container popup-success">
+            <div className="popup-icon">✓</div>
+            <h3 className="popup-title">Messaggio inviato!</h3>
+            <p className="popup-message">Ti risponderemo al più presto.</p>
+          </div>
+        </div>
+      )}
+
+      {/* Error Popup */}
+      {showErrorPopup && (
+        <div className="popup-overlay">
+          <div className="popup-container popup-error">
+            <div className="popup-icon">✕</div>
+            <h3 className="popup-title">Errore</h3>
+            <p className="popup-message">Qualcosa è andato storto. Riprova più tardi.</p>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="header">
         <div className="header-container">
