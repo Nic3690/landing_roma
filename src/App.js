@@ -17,10 +17,31 @@ function App() {
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const logos = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png'];
-  const logosPerSlide = 5;
+  const [logosPerSlide, setLogosPerSlide] = useState(5);
 
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+
+  useEffect(() => {
+    // Update logos per slide based on window width
+    const updateLogosPerSlide = () => {
+      const newLogosPerSlide = window.innerWidth <= 768 ? 2 : window.innerWidth <= 1024 ? 3 : 5;
+      setLogosPerSlide(newLogosPerSlide);
+
+      // Reset slide if current position is out of bounds
+      if (currentSlide > logos.length - newLogosPerSlide) {
+        setCurrentSlide(0);
+      }
+    };
+
+    // Set initial value
+    updateLogosPerSlide();
+
+    // Add resize listener
+    window.addEventListener('resize', updateLogosPerSlide);
+
+    return () => window.removeEventListener('resize', updateLogosPerSlide);
+  }, [currentSlide, logos.length]);
 
   useEffect(() => {
     // Parallax effect for hero background

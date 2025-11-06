@@ -1135,6 +1135,10 @@ body {
     padding: 20px 20px 40px 20px;
   }
 
+  .service-card h3 {
+    font-size: 18px;
+  }
+
   .process-step {
     padding: 30px 20px;
   }
