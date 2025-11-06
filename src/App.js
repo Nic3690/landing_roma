@@ -96,10 +96,11 @@ function App() {
       const ctx = canvas.getContext('2d');
 
       // Configuration
-      const PIXEL_SIZE = 5;
+      const isMobile = window.innerWidth <= 768;
+      const PIXEL_SIZE = isMobile ? 4 : 5;
       const section = canvas.closest('.intro-section');
       const CANVAS_WIDTH = section ? section.offsetWidth : 1200;
-      const CANVAS_HEIGHT = 150;
+      const CANVAS_HEIGHT = isMobile ? 100 : 150;
 
       canvas.width = CANVAS_WIDTH;
       canvas.height = CANVAS_HEIGHT;
