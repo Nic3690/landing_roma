@@ -1030,7 +1030,8 @@ body {
   .submit-btn,
   .cta-button-outline {
     font-size: 16px;
-    width: 280px;
+    width: 100%;
+    max-width: 350px;
     height: 40px;
     padding: 10px 20px;
   }
@@ -1127,6 +1128,14 @@ body {
   .services-grid {
     grid-template-columns: 1fr;
     gap: 30px;
+  }
+
+  .service-card {
+    padding: 20px 20px 40px 20px;
+  }
+
+  .process-step {
+    padding: 30px 20px;
   }
 
   .pricing-grid {
