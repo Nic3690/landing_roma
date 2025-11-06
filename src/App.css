@@ -1030,6 +1030,9 @@ body {
   .submit-btn,
   .cta-button-outline {
     font-size: 16px;
+    width: 280px;
+    height: 40px;
+    padding: 10px 20px;
   }
 
   .intro-section {
@@ -1088,7 +1091,12 @@ body {
     font-size: 15px;
   }
 
-  p {
+  p,
+  .service-card p,
+  .portfolio-subtitle,
+  .process-step p,
+  .about-content p,
+  .contact-subtitle {
     font-size: 15px;
   }
 
