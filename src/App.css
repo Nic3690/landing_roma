@@ -1013,7 +1013,7 @@ body {
   }
 
   .hero-content {
-    padding: 100px 40px 40px;
+    padding: 100px 10px 40px;
   }
 
   .hero-image {
@@ -1029,11 +1029,12 @@ body {
   .cta-button,
   .submit-btn,
   .cta-button-outline {
-    font-size: 16px;
+    font-size: 14px;
     width: 100%;
-    max-width: 350px;
     height: 40px;
-    padding: 10px 20px;
+    padding: 10px 16px;
+    white-space: nowrap;
+    align-self: stretch;
   }
 
   .intro-section {
