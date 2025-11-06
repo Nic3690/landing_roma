@@ -1008,12 +1008,28 @@ body {
     padding: 20px 30px;
   }
 
+  .logo {
+    height: 40px;
+  }
+
   .hero-content {
     padding: 100px 40px 40px;
   }
 
   .hero-image {
     height: 50vh;
+  }
+
+  .hero-label {
+    white-space: nowrap;
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .cta-button,
+  .submit-btn,
+  .cta-button-outline {
+    font-size: 16px;
   }
 
   .intro-section {
@@ -1071,7 +1087,11 @@ body {
   .intro-text {
     font-size: 15px;
   }
-  
+
+  p {
+    font-size: 15px;
+  }
+
   .services {
     padding: 35px 0;
   }

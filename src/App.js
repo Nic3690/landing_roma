@@ -383,7 +383,7 @@ function App() {
           <div className="hero-content">
             <div className="hero-label">Digital Experience - Virgo Roma</div>
             <h1 className="hero-title">
-              Costruiamo il tuo spazio<br></br>digitale
+              Costruiamo il tuo spazio digitale
             </h1>
             <a href="#contact" className="cta-button">
               Contattaci senza impegno
