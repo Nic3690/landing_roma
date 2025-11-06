@@ -33,13 +33,13 @@
     background: transparent;
   }
 
-  /* Layout: 3 colonne × 6 righe → celle quadrate */
+  /* Layout: 3 colonne × 5 righe → celle quadrate */
   .pixel-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    width: 60px;
-    height: 120px;
+    grid-template-rows: repeat(5, 1fr);
+    width: 90px;
+    height: 150px;
     background: transparent;
   }
 
@@ -74,6 +74,10 @@
 <script>
 (function() {
   const appearDur = 1000, pause = 200, disappearDur = 1000;
+  const animationCycle = appearDur + pause + disappearDur; // 2200ms
+  const delayBetweenNumbers = 0; // No delay between numbers
+  const totalSequence = (animationCycle * 3) + (delayBetweenNumbers * 2); // Total time for all 3 animations
+
   const grid = document.getElementById('pixelGrid');
   const all = Array.from(grid.querySelectorAll('[data-order]'));
   const ordered = all.map(p => ({ el: p, order: parseInt(p.dataset.order) || 0 }))
@@ -87,8 +91,18 @@
         appearDur + pause + (disappearDur/ordered.length)*i);
     });
   }
-  runCycle();
-  setInterval(runCycle, appearDur + pause + disappearDur);
+
+  function startAnimation() {
+    runCycle();
+    setInterval(runCycle, totalSequence);
+  }
+
+  // Wait for message from parent to start
+  window.addEventListener('message', (event) => {
+    if (event.data === 'start') {
+      startAnimation();
+    }
+  });
 })();
 </script>
 </body>

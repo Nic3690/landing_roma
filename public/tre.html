@@ -38,8 +38,8 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(5, 1fr);
-    width: 80px;
-    height: 100px;
+    width: 120px;
+    height: 150px;
     background: transparent;
   }
 
@@ -92,15 +92,20 @@
 <script>
 (function() {
   const appearDur = 1000, pause = 200, disappearDur = 1000;
+  const animationCycle = appearDur + pause + disappearDur; // 2200ms
+  const delayBetweenNumbers = 0; // No delay between numbers
+  const totalSequence = (animationCycle * 3) + (delayBetweenNumbers * 2); // Total time for all 3 animations
+  const startDelay = (animationCycle * 2) + (delayBetweenNumbers * 2); // Start after animations 1 & 2 finish
+
   const grid = document.getElementById('pixelGrid');
   const all = Array.from(grid.querySelectorAll('[data-order]'));
-  const ordered = all.map(p => ({ 
-    el: p, 
-    order: parseInt(p.dataset.order) || 0 
+  const ordered = all.map(p => ({
+    el: p,
+    order: parseInt(p.dataset.order) || 0
   }))
   .sort((a,b) => a.order - b.order)
   .map(x => x.el);
-  
+
   function runCycle() {
     ordered.forEach((el, i) => {
       setTimeout(() => el.classList.add('on'), (appearDur/ordered.length) * i);
@@ -108,9 +113,21 @@
         appearDur + pause + (disappearDur/ordered.length) * i);
     });
   }
-  
-  runCycle();
-  setInterval(runCycle, appearDur + pause + disappearDur);
+
+  function startAnimation() {
+    // Start after animations 1 & 2 finish + 6 seconds
+    setTimeout(() => {
+      runCycle();
+      setInterval(runCycle, totalSequence);
+    }, startDelay);
+  }
+
+  // Wait for message from parent to start
+  window.addEventListener('message', (event) => {
+    if (event.data === 'start') {
+      startAnimation();
+    }
+  });
 })();
 </script>
 </body>

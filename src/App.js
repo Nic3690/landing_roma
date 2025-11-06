@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import GridDistortion from './GridDistortion';
+import { MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos } from "react-icons/md";
 
 function App() {
   const [formData, setFormData] = useState({
@@ -18,25 +20,72 @@ function App() {
   const logosPerSlide = 5;
 
   useEffect(() => {
+    // Parallax effect for hero background
+    const handleParallax = () => {
+      const scrolled = window.pageYOffset;
+      const heroBackground = document.querySelector('.hero-distortion-background');
+      const heroSection = document.querySelector('.hero');
+
+      if (heroBackground && heroSection) {
+        const heroRect = heroSection.getBoundingClientRect();
+        const heroTop = heroRect.top + scrolled;
+        const heroBottom = heroTop + heroRect.height;
+
+        // Only apply parallax when hero section is in view
+        if (scrolled < heroBottom) {
+          const parallaxSpeed = 0.5;
+          heroBackground.style.transform = `translateY(${scrolled * parallaxSpeed}px)`;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleParallax);
+
+    // Intersection Observer for process animations
+    const processSection = document.querySelector('.process');
+    let animationsStarted = false;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !animationsStarted) {
+          animationsStarted = true;
+          // Trigger animations in iframes
+          const iframes = document.querySelectorAll('.step-animation iframe');
+          iframes.forEach(iframe => {
+            iframe.contentWindow.postMessage('start', '*');
+          });
+        }
+      });
+    }, {
+      threshold: 0.2 // Trigger when 20% of the section is visible
+    });
+
+    if (processSection) {
+      observer.observe(processSection);
+    }
 
     // Initialize Rome Skyline Animation
     const initSkylineAnimation = () => {
       const canvas = document.getElementById('skylineCanvas');
       if (!canvas) return;
-      
+
       const ctx = canvas.getContext('2d');
-      
+
       // Configuration
-      const PIXEL_SIZE = 3;
+      const PIXEL_SIZE = 5;
       const section = canvas.closest('.intro-section');
       const CANVAS_WIDTH = section ? section.offsetWidth : 1200;
       const CANVAS_HEIGHT = 150;
 
       canvas.width = CANVAS_WIDTH;
       canvas.height = CANVAS_HEIGHT;
-      
+
+      // Clear canvas immediately
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       let currentColumn = 0;
       let animationId = null;
+      let timeoutId = null;
       
       // Generate skyline data
       const width = Math.floor(CANVAS_WIDTH / PIXEL_SIZE);
@@ -182,25 +231,36 @@ function App() {
         } else {
           // Reset and loop
           currentColumn = 0;
-          setTimeout(() => {
+          timeoutId = setTimeout(() => {
             animationId = requestAnimationFrame(animate);
           }, 1000); // 1 second pause before restarting
         }
       }
       
       // Start animation after a delay
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         animate();
       }, 500);
-      
+
       return () => {
         if (animationId) {
           cancelAnimationFrame(animationId);
         }
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
       };
     };
-    
-    initSkylineAnimation();
+
+    const cleanup = initSkylineAnimation();
+
+    return () => {
+      window.removeEventListener('scroll', handleParallax);
+      if (cleanup) cleanup();
+      if (observer && processSection) {
+        observer.unobserve(processSection);
+      }
+    };
   }, []);
 
   const handleInputChange = (e) => {
@@ -241,24 +301,26 @@ function App() {
 
       {/* Hero Section */}
       <section className="hero">
+        <div className="hero-distortion-background">
+          <GridDistortion
+            imageSrc="/hero.png"
+            grid={20}
+            mouse={0.2}
+            strength={0.15}
+            relaxation={0.9}
+          />
+        </div>
         <div className="hero-wrapper">
           <div className="hero-content">
             <div className="hero-label">Digital Experience - Virgo Roma</div>
             <h1 className="hero-title">
-              Costruiamo il tuo spazio digitale.
+              Costruiamo il tuo spazio<br></br>digitale
             </h1>
-            <p className="hero-subtitle">
-              Dalla progettazione alla messa online:<br/>
-              sviluppiamo esperienze digitali complete,<br/>
-              pensate per far crescere la tua attività.
-            </p>
             <a href="#contact" className="cta-button">
               Contattaci senza impegno
             </a>
           </div>
-          <div className="hero-image">
-            <img src="hero.png" alt="Digital Experience" />
-          </div>
+          
         </div>
       </section>
 
@@ -345,7 +407,7 @@ function App() {
               onClick={prevSlide}
               disabled={currentSlide === 0}
             >
-              &lt;
+              <MdOutlineArrowBackIosNew />
             </button>
 
             <div className="logo-slider-track">
@@ -366,7 +428,7 @@ function App() {
               onClick={nextSlide}
               disabled={currentSlide >= logos.length - logosPerSlide}
             >
-              &gt;
+              <MdOutlineArrowForwardIos />
             </button>
           </div>
         </div>
@@ -387,8 +449,8 @@ function App() {
                   frameBorder="0"
                 />
               </div>
-              <div className="step-separator"></div>
               <h3>Analisi</h3>
+              <div className="step-separator"></div>
               <p>Comprendiamo<br/>esigenze e obiettivi<br/>del cliente.</p>
             </div>
 
@@ -401,8 +463,8 @@ function App() {
                   frameBorder="0"
                 />
               </div>
-              <div className="step-separator"></div>
               <h3>Design</h3>
+              <div className="step-separator"></div>
               <p>Traduciamo la strategia in<br/>un'interfaccia chiara ed<br/>elegante.</p>
             </div>
 
@@ -415,8 +477,8 @@ function App() {
                   frameBorder="0"
                 />
               </div>
-              <div className="step-separator"></div>
               <h3>Performance</h3>
+              <div className="step-separator"></div>
               <p>Ottimizziamo tecnologia e<br/>contenuti per garantire<br/>risultati misurabili.</p>
             </div>
           </div>
@@ -437,7 +499,43 @@ function App() {
               concretezza. Un team locale che porta avanti la filosofia Virgo: creare<br/>
               esperienze digitali che funzionano, senza compromessi.
             </p>
-            <button className="cta-button-outline">Raccontaci la tua idea</button>
+            <a href="#contact" className="cta-button">Parliamone</a>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="pricing">
+        <div className="pricing-grid">
+          <div className="pricing-card">
+            <h3>Sito Web</h3>
+            <div className="pricing-separator"></div>
+            <div className="pricing-content">
+              <p className="pricing-label">A partire da</p>
+              <p className="pricing-old">1260€</p>
+              <p className="pricing-price">650€ <span className="pricing-vat">+ iva</span></p>
+            </div>
+          </div>
+
+          <div className="pricing-card">
+            <h3>Ecommerce</h3>
+            <div className="pricing-separator"></div>
+            <div className="pricing-content">
+              <p className="pricing-label">A partire da</p>
+              <p className="pricing-old">3100€</p>
+              <p className="pricing-price">1600€ <span className="pricing-vat">+ iva</span></p>
+            </div>
+          </div>
+
+          <div className="pricing-card">
+            <h3>Software</h3>
+            <div className="pricing-separator"></div>
+            <div className="pricing-content">
+              <p className="pricing-request">
+                Prezzo su<br />
+                <a href="#contact" className="pricing-request-link">richiesta</a>
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -575,12 +673,31 @@ function App() {
 
       {/* Footer */}
       <footer className="footer">
+        <div className="footer-separator"></div>
         <div className="footer-container">
-          <div className="footer-brand">virgo</div>
-          
-          <div className="footer-links">
+          <div className="footer-column">
+            <img src="logo_black.png" alt="Virgo" className="footer-logo" />
+          </div>
+
+          <div className="footer-column">
+            <h4 className="footer-title">BRANDS</h4>
+            <p className="footer-text">Q-Design</p>
+          </div>
+
+          <div className="footer-column">
+            <h4 className="footer-title">SOCIAL</h4>
+            <a href="https://www.instagram.com/virgo.solutions/" target="_blank" rel="noopener noreferrer" className="footer-link">Instagram</a>
+            <a href="https://www.linkedin.com/company/virgosolutions/posts/?feedView=all" target="_blank" rel="noopener noreferrer" className="footer-link">LinkedIn</a>
+            <a href="https://api.whatsapp.com/send/?phone=393333218804&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" className="footer-link">WhatsApp</a>
+          </div>
+
+          <div className="footer-column">
+            <h4 className="footer-title">LEGAL</h4>
             <a href="/privacy" className="footer-link">Privacy Policy</a>
             <a href="/cookies" className="footer-link">Cookie Policy</a>
+          </div>
+
+          <div className="footer-column">
           </div>
         </div>
       </footer>
