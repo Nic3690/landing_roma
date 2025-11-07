@@ -420,10 +420,9 @@ function App() {
         <div className="intro-container">
           <h2 className="intro-title">Virgo arriva a Roma. Il web, come deve essere.</h2>
           <p className="intro-text">
-            Virgo Roma è la nuova sede dedicata allo sviluppo digitale.<br/>
-            Siti web ad alte prestazioni, e-commerce scalabili e software personalizzati: ogni progetto è<br/>
-            pensato per unire estetica, funzionalità e risultati concreti.<br/>
-            Seguiamo ogni fase con la cura tipica del metodo Virgo: analisi, progettazione, performance.
+          Benvenuta Virgo Roma — la nuova casa dello sviluppo digitale nella Capitale.<br></br>
+          Creiamo siti web ad alte prestazioni, e-commerce scalabili e software su misura che uniscono design, strategia e risultati.<br></br>
+          Ogni progetto nasce da un metodo preciso — analisi, progettazione, performance — per dare alle imprese<br></br>e ai professionisti una presenza digitale solida, veloce e di valore.
           </p>
           <div className="skyline-container">
             <canvas id="skylineCanvas"></canvas>
@@ -445,10 +444,9 @@ function App() {
                 <img src="sviluppo_web.png" alt="Sviluppo Siti Web" />
               </div>
               <p>
-                Design, strategia e codice si fondono per creare esperienze
-                digitali che comunicano valore. Ogni sito è costruito da zero,
-                ottimizzato per la velocità e pensato per crescere con il tuo
-                brand.
+              Realizziamo siti web professionali a Roma pensati per distinguersi.
+              Design, strategia e codice si incontrano per costruire esperienze digitali eleganti, ottimizzate per la velocità e pronte a crescere insieme al tuo brand.
+              Dal primo wireframe al lancio, tutto è curato nei minimi dettagli.  
               </p>
             </div>
 
@@ -458,9 +456,9 @@ function App() {
                 <img src="sviluppo_ecommerce.png" alt="Sviluppo Ecommerce" />
               </div>
               <p>
-                Progettiamo piattaforme di vendita online performanti,
-                facili da gestire e integrate con sistemi di pagamento e
-                logistica. Dalla UX al checkout, tutto è ottimizzato per vendere.
+              Progettiamo e-commerce performanti che convertono davvero.
+              Ogni piattaforma è facile da gestire, integrata con sistemi di pagamento e logistica, e costruita attorno al tuo modo di vendere.
+              Dalla UX al checkout, ogni passaggio è pensato per aumentare le vendite.
               </p>
             </div>
 
@@ -470,10 +468,8 @@ function App() {
                 <img src="sviluppo_software.png" alt="Software Custom" />
               </div>
               <p>
-                Realizziamo soluzioni su misura per la gestione interna
-                della tua azienda. Gestionali, portali e applicazioni web
-                costruiti intorno ai tuoi processi, per rendere il lavoro
-                più efficiente e connesso.
+              Creiamo soluzioni digitali su misura per migliorare la gestione interna della tua azienda.
+              Gestionali, portali o applicazioni web: sviluppiamo strumenti costruiti attorno ai tuoi processi, per rendere il lavoro più semplice, efficiente e connesso.
               </p>
             </div>
           </div>
@@ -489,7 +485,8 @@ function App() {
         <div className="portfolio-container">
           <h2>Abbiamo dato forma alle loro idee.</h2>
           <p className="portfolio-subtitle">
-            Ogni progetto è un'esperienza digitale unica, costruita intorno agli obiettivi del brand.
+            Ogni progetto racconta una storia diversa, ma ha lo stesso punto di partenza: la visione del cliente.<br></br>
+            Realizziamo esperienze digitali su misura, dove estetica e funzionalità si fondono per valorizzare l’identità del brand.
           </p>
 
           <div className="logo-slider">
@@ -542,7 +539,7 @@ function App() {
               </div>
               <h3>Analisi</h3>
               <div className="step-separator"></div>
-              <p>Comprendiamo<br/>esigenze e obiettivi<br/>del cliente.</p>
+              <p>Studiamo il tuo business, comprendiamo obiettivi e target, e costruiamo la strategia più efficace per far crescere la tua presenza online.</p>
             </div>
 
             <div className="process-step">
@@ -556,7 +553,7 @@ function App() {
               </div>
               <h3>Design</h3>
               <div className="step-separator"></div>
-              <p>Traduciamo la strategia in<br/>un'interfaccia chiara ed<br/>elegante.</p>
+              <p>Trasformiamo la strategia in un’interfaccia chiara, elegante e orientata alla conversione. L’esperienza utente è sempre al centro.</p>
             </div>
 
             <div className="process-step">
@@ -570,7 +567,7 @@ function App() {
               </div>
               <h3>Performance</h3>
               <div className="step-separator"></div>
-              <p>Ottimizziamo tecnologia e<br/>contenuti per garantire<br/>risultati misurabili.</p>
+              <p>Ottimizziamo codice, contenuti e tecnologia per garantire risultati misurabili: più velocità, più visibilità, più valore.</p>
             </div>
           </div>
         </div>
@@ -585,10 +582,9 @@ function App() {
           <div className="about-content">
             <h2>La qualità Virgo,<br/>con il cuore a Roma.</h2>
             <p>
-              Virgo Roma nasce per offrire alle imprese del territorio un<br/>
-              partner tecnologico capace di coniugare innovazione, estetica e<br/>
-              concretezza. Un team locale che porta avanti la filosofia Virgo: creare<br/>
-              esperienze digitali che funzionano, senza compromessi.
+            Virgo Roma nasce per offrire alle imprese del territorio un partner tecnologico locale, affidabile e orientato ai risultati.<br></br>
+            Innovazione, estetica e concretezza sono i nostri valori guida.<br></br>
+            Siamo un team che vive il digitale ogni giorno, con un’unica missione: creare esperienze online che funzionano, senza compromessi.
             </p>
             <a href="#contact" className="cta-button">Parliamone</a>
           </div>
@@ -636,8 +632,7 @@ function App() {
         <div className="contact-container">
           <h2>Hai un progetto? Costruiamolo insieme.</h2>
           <p className="contact-subtitle">
-            Raccontaci la tua idea. Che sia un sito, un e-commerce o un software su misura,<br/>
-            ti accompagneremo in ogni fase — dall'analisi alla messa online.
+          Raccontaci la tua idea. Che si tratti di un sito web, di un e-commerce o di un software personalizzato,<br></br>ti accompagneremo passo dopo passo — dall’analisi alla messa online — con la qualità e la precisione del metodo Virgo.
           </p>
           
           <form className="contact-form" onSubmit={handleSubmit}>
